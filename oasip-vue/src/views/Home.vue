@@ -35,7 +35,7 @@ onBeforeMount(async () => {
         <span>EMPTY</span>
       </div>
       <div v-else>
-        <event-list :event="events"/>
+        <event-list :events="events"/>
       </div>
     </div>
   </div>
