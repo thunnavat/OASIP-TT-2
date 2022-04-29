@@ -31,7 +31,7 @@ onBeforeMount(async () => {
   <div class="absolute top-2/4 m-2">
     <h2 class="text-xl font-semibold ">EVENT LISTS</h2>
     <div class="box-border w-screen p-4 border-t-8 border-black">
-      <div class="font-semibold flex justify-center items-center text-black box-content bg-gray-300 h-96" v-if="events.length === 0">
+      <div class="font-semibold flex justify-center items-center text-black box-content bg-[#c4c4c4] h-96" v-if="events.length === 0">
         <span>EMPTY</span>
       </div>
       <div v-else>
