@@ -5,6 +5,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter @Setter
 @Entity @Table(name = "events")
@@ -21,7 +23,7 @@ public class Event {
     private String bookingEmail;
 
     @Column(name = "eventStartTime", nullable = false)
-    private Instant eventStartTime;
+    private LocalDateTime eventStartTime;
 
     @Column(name = "eventDuration", nullable = false)
     private Integer eventDuration;
@@ -32,5 +34,8 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "eventCategoryId", nullable = false)
     private Eventcategory eventCategory;
+
+
+
 
 }

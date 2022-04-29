@@ -27,5 +27,6 @@ public class Eventcategory {
 
     @JsonIgnore
     @OneToMany(mappedBy = "eventCategory")
-    private Set<Event> events = new LinkedHashSet<>();
+    private Set<sit.int221.oasipservice.entities.Event> events = new LinkedHashSet<>();
+
 }

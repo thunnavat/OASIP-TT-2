@@ -1,10 +1,14 @@
 <script setup>
+import moment from 'moment'
 const props = defineProps({
   events : {
    type: Array,
    default: []
   }
 })
+ const date = (date) => {
+      return  moment(date).format('DD MMMM YYYY HH.mm');
+    }
 </script>
  
 <template>
@@ -14,7 +18,7 @@ const props = defineProps({
       <ul>
         <li>CATEGORY: {{event.eventCategory.eventCategoryName}}</li>
         <li>NAME: {{event.bookingName}}</li>
-        <li>START TIME: {{event.eventStartTime}}</li>  
+        <li>START TIME: {{date(event.eventStartTime)}}</li>  
         <li>DURATION: {{event.eventDuration}} mins</li>
       </ul>
     </div>
