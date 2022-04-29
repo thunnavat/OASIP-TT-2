@@ -1,5 +1,6 @@
 <script setup>
 import moment from 'moment'
+defineEmits(['detail'])
 const props = defineProps({
   events : {
    type: Array,
@@ -7,7 +8,7 @@ const props = defineProps({
   }
 })
  const date = (date) => {
-      return  moment(date).format('DD MMMM YYYY HH.mm');
+      return  moment.utc(date).local().format('DD MMMM YYYY HH.mm');
     }
 </script>
  
@@ -16,11 +17,13 @@ const props = defineProps({
   <div class="grid grid-cols-4 gap-4 bg-black">
     <div v-for="event in events" :key="event.id" class="bg-white m-4">
       <ul>
-        <li>CATEGORY: {{event.eventCategory.eventCategoryName}}</li>
-        <li>NAME: {{event.bookingName}}</li>
-        <li>START TIME: {{date(event.eventStartTime)}}</li>  
-        <li>DURATION: {{event.eventDuration}} mins</li>
+        <li>START TIME: {{date(event.eventStartTime)}}           </li>  
+        <li>DURATION:   {{event.eventDuration}} mins             </li>
+        <li>CATEGORY:   {{event.eventCategory.eventCategoryName}}</li>
+        <li>NAME:       {{event.bookingName}}                    </li>
       </ul>
+      <button class="flex justify-end mt-4 class= base-button ml-3 mb-4 bg-transparent border border-solid text-red-500 border-red-500 hover:bg-red-500 hover:text-black active:bg-red-600 font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3" 
+      @click="$emit('detail')">Detail</button>
     </div>
   </div>
 </div>
