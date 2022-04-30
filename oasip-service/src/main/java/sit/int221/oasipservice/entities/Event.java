@@ -33,7 +33,4 @@ public class Event {
     @JoinColumn(name = "eventCategoryId", nullable = false)
     private Eventcategory eventCategory;
 
-
-
-
 }
