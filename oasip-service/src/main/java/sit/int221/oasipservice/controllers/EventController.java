@@ -17,4 +17,9 @@ public class EventController {
 
     @GetMapping("")
     public List<Event> getEvents() { return service.getEvents(); }
+
+    @GetMapping("/{id}")
+    public Event getEventById(@PathVariable Integer id) {
+        return service.getEventById(id);
+    }
 }

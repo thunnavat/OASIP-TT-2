@@ -1,6 +1,8 @@
 package sit.int221.oasipservice.services;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import sit.int221.oasipservice.entities.Event;
 import sit.int221.oasipservice.repositories.EventRepository;
 
@@ -15,5 +17,12 @@ public class EventService {
     }
 
     public List<Event> getEvents() { return repository.findAll(); }
+
+    public Event getEventById(Integer eventId) {
+        Event event = repository.findById(eventId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Event id " + eventId + "Does not exist"));
+        return  event;
+    }
 
 }
