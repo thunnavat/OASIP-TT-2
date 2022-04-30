@@ -5,7 +5,6 @@ import ShowDetail from '../components/ShowDetail.vue'
 
 const eventViews = ['ALL', 'DAY', 'CATEGORY', 'UPCOMING', 'PAST']
 const events = ref([])
-const showDetails = ref({})
 const isModal = ref(false)
 
 const getEvents = async () => {
@@ -19,7 +18,10 @@ onBeforeMount(async () => {
   await getEvents()
 
 })
-const getdetail = () => {
+
+const currentEvent = ref({})
+const getdetail = (event) => {
+    currentEvent.value = event
     isModal.value = true
 }
 
@@ -39,11 +41,9 @@ const closeModal = (e) => {
     </select>
   </div>
     <!-- Show Detail -->
-  <div class="modal-content">
-    <div class="modal" v-if="isModal">
-      <show-detail :event="events" @close="closeModal" />
+    <div v-if="isModal">
+      <show-detail :event="currentEvent" @close="closeModal" />
     </div>
-  </div>
   <!-- Show Event List -->
   <div class="absolute top-2/4 m-2">
     <h2 class="text-xl font-semibold ">EVENT LISTS</h2>

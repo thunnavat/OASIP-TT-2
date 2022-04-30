@@ -6,28 +6,27 @@ defineProps({
        type: Object
         }
 })
-const date = (date) => {
-      return  moment(date).format('DD MMMM YYYY HH.mm');
-    }
+
 </script>
  
 <template>
 <div class="modal-mask">
     <div class="modal-wrapper">
-        <div class="modal-container">
+        <div class="modal-container bg-blue-400">
             <div class="modal-header text-lg font-bold" >
-                <h3>Detail </h3>
+                <h3> Detail </h3>
             </div>
             <div class="modal-body ">
-        <p>START TIME: {{date(event.eventStartTime)}}         </p>  
-        <p>DURATION: {{event.eventDuration}} mins             </p>
-        <!-- <p>CATEGORY: {{event.eventCategory.eventCategoryName}}</p> -->
-        <p>NAME: {{event.bookingName}}                        </p>
-        <p>EMAIL:{{event.bookingEmail}}                       </p>
-        <p>Note: {{event.eventNotes}}                         </p>
+        <p>START TIME: {{ moment(event.eventStartTime).format('DD MMMM YYYY HH.mm')  }}        </p>  
+        <p>DURATION:   {{ event.eventDuration }} mins                                          </p>
+        <p>CATEGORY:   {{ event.eventCategory.eventCategoryName }}                               </p>
+        <p>NAME:       {{ event.bookingName }}                                                 </p>
+        <p>EMAIL:      {{ event.bookingEmail }}                                                </p>
+        <p>NOTE:       {{ event.eventNotes }}                                                  </p>
             </div>
             <div class=" text-black flex justify-end">
-                <button class="bg-white border-black" @click="$emit('close', false)">Close</button>
+                <button class=" ml-3 mb-4  border border-solid bg-white  border-amber-600 hover:bg-amber-600 hover:text-black active:bg-red-600 font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3"
+                 @click="$emit('close', false)">Close</button>
             </div>
         </div>
     </div>
@@ -56,14 +55,8 @@ const date = (date) => {
     width: 400px;
     margin: 0px auto;
     padding: 20px 30px;
-    background-color: cadetblue;
     border-radius: 2px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-}
-
-.modal-header h3 {
-    margin-top: 0;
-
 }
 
 .modal-body {
