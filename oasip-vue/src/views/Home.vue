@@ -1,9 +1,11 @@
 <script setup>
 import {ref , onBeforeMount} from 'vue'
 import EventList from '../components/EventList.vue'
+import ShowDetail from '../components/ShowDetail.vue'
 
 const eventViews = ['ALL', 'DAY', 'CATEGORY', 'UPCOMING', 'PAST']
 const events = ref([])
+const isModal = ref(false)
 
 const getEvents = async () => {
   const res = await fetch('http://localhost:8080/api/events')
@@ -14,8 +16,19 @@ const getEvents = async () => {
 }
 onBeforeMount(async () => {
   await getEvents()
+
 })
 
+const currentEvent = ref({})
+const getdetail = (event) => {
+    currentEvent.value = event
+    isModal.value = true
+}
+
+
+const closeModal = (e) => {
+  isModal.value = e
+}
 </script>
 
 <template>
@@ -27,6 +40,10 @@ onBeforeMount(async () => {
       <option option value="ALL" v-for="(eventView, index) in eventViews" :key="index">{{ eventView }}</option> 
     </select>
   </div>
+    <!-- Show Detail -->
+    <div v-if="isModal">
+      <show-detail :event="currentEvent" @close="closeModal" />
+    </div>
   <!-- Show Event List -->
   <div class="absolute top-2/4 m-2">
     <h2 class="text-xl font-semibold ">EVENT LISTS</h2>
@@ -35,7 +52,7 @@ onBeforeMount(async () => {
         <span>EMPTY</span>
       </div>
       <div v-else>
-        <event-list :events="events"/>
+        <event-list :events="events" @detail="getdetail"/>
       </div>
     </div>
   </div>
