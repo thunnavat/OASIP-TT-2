@@ -19,6 +19,7 @@ onBeforeMount(async () => {
 
 })
 
+
 const currentEvent = ref({})
 const getdetail = (event) => {
     currentEvent.value = event
