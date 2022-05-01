@@ -1,5 +1,7 @@
 <script setup>
-import moment from 'moment'
+import dayjs from 'dayjs'
+
+
 defineEmits(['close'])
 defineProps({
     event: {
@@ -12,20 +14,20 @@ defineProps({
 <template>
 <div class="modal-mask">
     <div class="modal-wrapper">
-        <div class="modal-container bg-blue-400">
-            <div class="modal-header text-lg font-bold" >
+        <div class="modal-container bg-[#855B52]">
+            <div class="modal-header text-lg font-bold text-white"  >
                 <h3> Detail </h3>
             </div>
-            <div class="modal-body ">
-        <p>START TIME: {{ moment(event.eventStartTime).format('DD MMMM YYYY HH.mm')  }}        </p>  
-        <p>DURATION:   {{ event.eventDuration }} mins                                          </p>
-        <p>CATEGORY:   {{ event.eventCategory.eventCategoryName }}                               </p>
-        <p>NAME:       {{ event.bookingName }}                                                 </p>
-        <p>EMAIL:      {{ event.bookingEmail }}                                                </p>
-        <p>NOTE:       {{ event.eventNotes }}                                                  </p>
+            <div class="modal-body text-white ">
+        <p class="font-medium">START TIME: {{ dayjs(event.eventStartTime).format('DD MMMM YYYY HH.mm')  }}         </p>  
+        <p class="font-medium">DURATION:   {{ event.eventDuration }} mins                                          </p>
+        <p class="font-medium">CATEGORY:   {{ event.eventCategory.eventCategoryName }}                             </p>
+        <p class="font-medium">NAME:       {{ event.bookingName }}                                                 </p>
+        <p class="font-medium">EMAIL:      {{ event.bookingEmail }}                                                </p>
+        <p class="font-medium">NOTE:       {{ event.eventNotes }}                                                  </p>
             </div>
             <div class=" text-black flex justify-end">
-                <button class=" ml-3 mb-4  border border-solid bg-white  border-amber-600 hover:bg-amber-600 hover:text-black active:bg-red-600 font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3"
+                <button class=" ml-3 mb-4  border border-solid bg-white  border-yellow-800 hover:bg-yellow-800 hover:text-black font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3"
                  @click="$emit('close', false)">Close</button>
             </div>
         </div>

@@ -2,6 +2,7 @@
 import {ref , onBeforeMount} from 'vue'
 import EventList from '../components/EventList.vue'
 import ShowDetail from '../components/ShowDetail.vue'
+import dayjs from 'dayjs'
 
 const eventViews = ['ALL', 'DAY', 'CATEGORY', 'UPCOMING', 'PAST']
 const events = ref([])
@@ -16,16 +17,17 @@ const getEvents = async () => {
 }
 onBeforeMount(async () => {
   await getEvents()
-
+  events.value.sort((a, b) => {
+    return dayjs(b.eventStartTime) - dayjs(a.eventStartTime)
+  })
 })
 
 
 const currentEvent = ref({})
-const getdetail = (event) => {
+const getDetail = (event) => {
     currentEvent.value = event
     isModal.value = true
 }
-
 
 const closeModal = (e) => {
   isModal.value = e
@@ -35,10 +37,11 @@ const closeModal = (e) => {
 <template>
 <div>
   <div class="mt-4 flex justify-end">
-    <button class="text-black">BOOKING</button>
+    <button class="text-white bg-black mr-4 border border-solid hover:bg-[#855B52]  active:bg-cyan-600 font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3">
+      BOOKING </button>
     <!-- Select Bar -->
-    <select id="select-bar" class="select ml-4 mb-6 mt-3  text-black">
-      <option option value="ALL" v-for="(eventView, index) in eventViews" :key="index">{{ eventView }}</option> 
+    <select id="select-bar" class="select ml-4 mb-6 mt-3  text-black bg-blue-300 rounded font-bold">
+      <option option value="ALL" v-for="(eventView, index) in eventViews" :key="index" class="font-bold">{{ eventView }}</option> 
     </select>
   </div>
     <!-- Show Detail -->
@@ -46,14 +49,14 @@ const closeModal = (e) => {
       <show-detail :event="currentEvent" @close="closeModal" />
     </div>
   <!-- Show Event List -->
-  <div class="absolute top-2/4 m-2">
-    <h2 class="text-xl font-semibold ">EVENT LISTS</h2>
-    <div class="box-border w-screen p-4 border-t-8 border-black">
+  <div class="absolute inset-x-4 top-2/4">
+    <h2 class="text-xl font-bold ">EVENT LISTS</h2>
+    <div class="box-border p-4 border-t-8 border-black">
       <div class="font-semibold flex justify-center items-center text-black box-content bg-[#c4c4c4] h-96" v-if="events.length === 0">
         <span>EMPTY</span>
       </div>
       <div v-else>
-        <event-list :events="events" @detail="getdetail"/>
+        <event-list :events="events" @detail="getDetail"/>
       </div>
     </div>
   </div>
