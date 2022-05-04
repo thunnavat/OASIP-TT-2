@@ -5,13 +5,15 @@ import ShowDetail from '../components/ShowDetail.vue'
 import dayjs from 'dayjs'
 import AddEditEvent from '../components/AddEditEvent.vue'
 
+const url = import.meta.env.PROD ?  import.meta.env.VITE_API_URL : 'http://localhost:8080/api';
 const eventViews = ['ALL', 'DAY', 'CATEGORY', 'UPCOMING', 'PAST']
 const events = ref([])
 const isModal = ref(false)
 const clickForBooking = ref(false)
+console.log(url);
 
 const getEvents = async () => {
-  const res = await fetch('http://localhost:8080/api/events')
+  const res = await fetch(`${url}/events`)
   if (res.status === 200) {
     events.value = await res.json()
     console.log('Get data')
