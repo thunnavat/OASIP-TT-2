@@ -25,7 +25,7 @@ defineProps({
         <p class="font-medium">NAME:       {{ event.bookingName }}                                                 </p>
         <p class="font-medium">EMAIL:      {{ event.bookingEmail }}                                                </p>
         <p class="font-medium">NOTE:       {{ event.eventNotes }}                                                  </p>
-            </div>
+        </div>
             <div class=" text-black flex justify-end">
                 <button class=" ml-3 mb-4  border border-solid bg-white  border-yellow-800 hover:bg-yellow-800 hover:text-black font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3"
                  @click="$emit('close', false)">Close</button>

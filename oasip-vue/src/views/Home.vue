@@ -3,10 +3,12 @@ import {ref , onBeforeMount} from 'vue'
 import EventList from '../components/EventList.vue'
 import ShowDetail from '../components/ShowDetail.vue'
 import dayjs from 'dayjs'
+import AddEditEvent from '../components/AddEditEvent.vue'
 
 const eventViews = ['ALL', 'DAY', 'CATEGORY', 'UPCOMING', 'PAST']
 const events = ref([])
 const isModal = ref(false)
+const clickForBooking = ref(false)
 
 const getEvents = async () => {
   const res = await fetch('http://localhost:8080/api/events')
@@ -22,6 +24,22 @@ onBeforeMount(async () => {
   })
 })
 
+const newestEvent = ref({})
+const createNewEvent = async (newEvent) => {
+  const res = await fetch('http://localhost:8080/api/events', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify({ bookingName : newEvent.bookingName , eventCategoryName: newEvent.eventCategoryName , eventStartTime: newEvent.eventStartTime ,
+     bookingEmail: newEvent.bookingEmail, eventNotes: newEvent.eventNotes, eventDuration: newEvent.eventDuration })
+  })
+  if (res.status === 201) {
+    const addedEvent = await res.json()
+    events.value.push(addedEvent)
+    console.log('Added sucessfully')
+  } else console.log('error, cannot be added')
+}
 
 const currentEvent = ref({})
 const getDetail = (event) => {
@@ -32,17 +50,28 @@ const getDetail = (event) => {
 const closeModal = (e) => {
   isModal.value = e
 }
+
+const cancelform = () => {
+  newestEvent.value = {}
+  clickForBooking.value = false
+}
 </script>
 
 <template>
 <div>
   <div class="mt-4 flex justify-end">
-    <button class="text-white bg-black mr-4 border border-solid hover:bg-[#855B52]  active:bg-cyan-600 font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3">
+    <button @click="clickForBooking = !clickForBooking" class="text-white bg-black mr-4 border border-solid hover:bg-[#855B52]  active:bg-cyan-600 font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3">
       BOOKING </button>
     <!-- Select Bar -->
     <select id="select-bar" class="select ml-4 mb-6 mt-3  text-black bg-blue-300 rounded font-bold">
       <option option value="ALL" v-for="(eventView, index) in eventViews" :key="index" class="font-bold">{{ eventView }}</option> 
     </select>
+  </div>
+    <add-edit-event v-show="clickForBooking"
+    @addmovie = createNewEvent
+    :events="newestEvent"
+    @cancel = cancelform />
+    <div>
   </div>
     <!-- Show Detail -->
     <div v-if="isModal">
