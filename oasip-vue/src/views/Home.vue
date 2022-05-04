@@ -23,6 +23,18 @@ onBeforeMount(async () => {
     return dayjs(b.eventStartTime) - dayjs(a.eventStartTime)
   })
 })
+// ดึงมาเเล้วติด Cors 
+// const removeEvents = async (id) => {
+//   const res = await fetch(`http://localhost:8080/api/events/${id}` , {
+//     method:'DELETE'
+//   })
+//   if(res.status === 201 ){
+//     events.value = events.value.filter((event) => event.id !== id)
+//   }
+//   else{
+//     console.log('Error , cannot delete event')
+//   }
+// }
 
 const newestEvent = ref({})
 const createNewEvent = async (newEvent) => {

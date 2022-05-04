@@ -1,0 +1,18 @@
+services:
+  db:
+    container_name: db
+    environment:
+      - MYSQL_ROOT_PASSWORD: 'oasiptt2'
+    image: mysql
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./database/script:/docker-entrypoint-initdb.d/
+
+  spring:
+    container_name: spring
+    environment:
+      - MYSQL_DB_USER: root
+      - MYSQL_DB_NAME: oasip
+      - MYSQL_DB_PASSWORD: oasiptt2
+      - MYSQL_DB_HOST: db 
