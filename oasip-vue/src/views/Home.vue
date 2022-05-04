@@ -38,19 +38,28 @@ onBeforeMount(async () => {
 
 const newestEvent = ref({})
 const createNewEvent = async (newEvent) => {
-  const res = await fetch('http://localhost:8080/api/events', {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json'
-    },
-    body: JSON.stringify({ bookingName : newEvent.bookingName , eventCategoryName: newEvent.eventCategoryName , eventStartTime: newEvent.eventStartTime ,
-     bookingEmail: newEvent.bookingEmail, eventNotes: newEvent.eventNotes, eventDuration: newEvent.eventDuration })
-  })
-  if (res.status === 201) {
-    const addedEvent = await res.json()
-    events.value.push(addedEvent)
-    console.log('Added sucessfully')
-  } else console.log('error, cannot be added')
+  if(newEvent.bookingEmail === undefined){
+    alert('Please enter email address')
+  }
+  else if(Object.values(newEvent.bookingEmail).includes('@') && Object.values(newEvent.bookingEmail).includes('.')){
+    const res = await fetch('http://localhost:8080/api/events', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({ bookingName : newEvent.bookingName , eventCategoryName: newEvent.eventCategoryName , eventStartTime: newEvent.eventStartTime ,
+      bookingEmail: newEvent.bookingEmail, eventNotes: newEvent.eventNotes, eventDuration: newEvent.eventDuration })
+    })
+    if (res.status === 201) {
+      const addedEvent = await res.json()
+      events.value.push(addedEvent)
+      console.log('Added sucessfully')
+    } else console.log('error, cannot be added')
+  }
+  else{
+    alert('Please enter a valid email address')
+  }
+ 
 }
 
 const currentEvent = ref({})
@@ -80,7 +89,7 @@ const cancelform = () => {
     </select>
   </div>
     <add-edit-event v-show="clickForBooking"
-    @addmovie = createNewEvent
+    @addEvent = createNewEvent
     :events="newestEvent"
     @cancel = cancelform />
     <div>
