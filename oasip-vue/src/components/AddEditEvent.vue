@@ -1,5 +1,7 @@
 <script setup>
 import { computed } from 'vue'
+import dayjs from 'dayjs'
+
 defineEmits(['addEvent','cancel'])
 const props = defineProps ({
   events: {
@@ -7,12 +9,11 @@ const props = defineProps ({
     default : {}
   }
 })
-
 const newEvent = computed(() => {
   return {
    bookingName : props.events.bookingName ,
    eventCategoryName : props.events.eventCategoryName ,
-   eventStartTime : props.events.eventStartTime ,
+   eventStartTime : props.events.eventStartTime === undefined ? dayjs().format('YYYY-MM-DDTHH:mm') : props.events.eventStartTime,
    eventDuration : props.events.eventDuration ,
    bookingEmail : props.events.bookingEmail ,
    eventNotes : props.events.eventNotes 
