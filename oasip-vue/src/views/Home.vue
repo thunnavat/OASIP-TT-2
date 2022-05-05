@@ -8,6 +8,7 @@ import AddEditEvent from '../components/AddEditEvent.vue'
 const url = import.meta.env.PROD ?  import.meta.env.VITE_API_URL : 'http://localhost:8080/api';
 const eventViews = ['ALL', 'DAY', 'CATEGORY', 'UPCOMING', 'PAST']
 const events = ref([])
+const eventCategories = ref([])
 const isModal = ref(false)
 const clickForBooking = ref(false)
 console.log(url);
@@ -19,24 +20,33 @@ const getEvents = async () => {
     console.log('Get data')
   } else console.log('Error, cannot get data')
 }
+const getEventCategories = async () => {
+  const res = await fetch(`${url}/eventCategories`)
+  if (res.status === 200) {
+    eventCategories.value = await res.json()
+    console.log('Get event Category')
+  } else console.log('Error, cannot get event Category')
+}
 onBeforeMount(async () => {
   await getEvents()
+  await getEventCategories()
   events.value.sort((a, b) => {
     return dayjs(b.eventStartTime) - dayjs(a.eventStartTime)
   })
 })
-// ดึงมาเเล้วติด Cors 
-// const removeEvents = async (id) => {
-//   const res = await fetch(`http://localhost:8080/api/events/${id}` , {
-//     method:'DELETE'
-//   })
-//   if(res.status === 201 ){
-//     events.value = events.value.filter((event) => event.id !== id)
-//   }
-//   else{
-//     console.log('Error , cannot delete event')
-//   }
-// }
+
+const removeEvent = async (deleteEventId) => {
+  if (confirm(`Do you want to delete event-id: ${deleteEventId} `) === true) {
+    const res = await fetch(`${url}/events/${deleteEventId}` , {
+      method:'DELETE'
+    })
+    if(res.status === 200 ){
+      events.value = events.value.filter((event) => event.id !== deleteEventId)
+    } else console.log('Error , cannot delete event')
+  } else {
+    console.log('cancel')
+  }
+}
 
 const newestEvent = ref({})
 const createNewEvent = async (newEvent) => {
@@ -44,7 +54,7 @@ const createNewEvent = async (newEvent) => {
     alert('Please enter email address')
   }
   else if(Object.values(newEvent.bookingEmail).includes('@') && Object.values(newEvent.bookingEmail).includes('.')){
-    const res = await fetch('http://localhost:8080/api/events', {
+    const res = await fetch(`${url}/events`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
@@ -93,6 +103,7 @@ const cancelform = () => {
     <add-edit-event v-show="clickForBooking"
     @addEvent = createNewEvent
     :events="newestEvent"
+    :eventCategories="eventCategories"
     @cancel = cancelform />
     <div>
   </div>
@@ -108,7 +119,7 @@ const cancelform = () => {
         <span>EMPTY</span>
       </div>
       <div v-else>
-        <event-list :events="events" @detail="getDetail"/>
+        <event-list :events="events" @detail="getDetail" @deleteEvent="removeEvent"/>
       </div>
     </div>
   </div>

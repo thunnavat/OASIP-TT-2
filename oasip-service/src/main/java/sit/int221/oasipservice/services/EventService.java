@@ -25,4 +25,15 @@ public class EventService {
         return  event;
     }
 
+    public Event create(Event newEvent) {
+        return repository.saveAndFlush(newEvent);
+    }
+
+    public void delete(Integer eventId) {
+        repository.findById(eventId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Event id " + eventId + "Does not exist"));
+        repository.deleteById(eventId);
+    }
+
 }

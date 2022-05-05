@@ -22,4 +22,15 @@ public class EventController {
     public Event getEventById(@PathVariable Integer id) {
         return service.getEventById(id);
     }
+
+    @PostMapping("")
+    public Event create(@RequestBody Event newEvent) {
+        return service.create(newEvent);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Integer id) {
+        service.delete(id);
+    }
+
 }
