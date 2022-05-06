@@ -24,7 +24,12 @@ const newEvent = computed(() => {
   }
 })
 
-// const selectedEventCategory = ref('')
+const selectedDuration = ref('')
+const duration = (id) => {
+  selectedDuration.value = props.eventCategories[id - 1].eventDuration + ' ' + 'Minutes'
+  newEvent.value.eventDuration = selectedDuration.value.slice(0,3)
+}
+
 const findDuration = (selectedCategoryId) => {
   const eventCategory = props.eventCategories.filter(eventCategory => eventCategory.id === selectedCategoryId)
   newEvent.value.eventDuration = eventCategory.eventDuration
@@ -41,12 +46,12 @@ const findDuration = (selectedCategoryId) => {
     <span class="font-bold"> Email : </span> <input type="email" class="border-2 border-black text-black ml-1 mt-2 bg-zinc-300	" v-model="newEvent.bookingEmail"  >
     <span>
       <span class="font-bold"> Category : </span> 
-        <select  class="border-2 border-black text-black ml-1 mt-2 bg-zinc-300" v-model="newEvent.eventCategoryId">
+        <select  class="border-2 border-black text-black ml-1 mt-2 bg-zinc-300" v-model="newEvent.eventCategoryId" @change="duration(newEvent.eventCategoryId)">
           <option v-for="eventCategory in eventCategories" :key="eventCategory.id" :value="eventCategory.id">{{ eventCategory.eventCategoryName }}</option>
         </select>
     </span>
     <span class="font-bold"> StartTime : </span> <input  type="datetime-local" class="text-black border-2 border-black bg-zinc-300 "  min="2022-04-19T00:01" v-model="newEvent.eventStartTime">
-   <span class="font-bold"> Duration : </span> <input disabled type="text" :value="newEvent.eventDuration" class="text-black border-2 border-black bg-zinc-300 opacity-50 hover:cursor-not-allowed" >
+   <span class="font-bold"> Duration : </span> <input disabled type="text" :value="selectedDuration" class="text-black border-2 border-black bg-zinc-300 opacity-50 hover:cursor-not-allowed" >
   </p>
   <p class="ml-4"> <span class="font-bold"> Notes : </span> <br> 
    <textarea rows="4" cols="180" class="border-2 border-black bg-zinc-300" v-model="newEvent.eventNotes"></textarea> <br>
