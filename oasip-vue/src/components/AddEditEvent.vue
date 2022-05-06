@@ -27,7 +27,8 @@ const newEvent = computed(() => {
 const selectedDuration = ref('')
 const duration = (id) => {
   selectedDuration.value = props.eventCategories[id - 1].eventDuration + ' ' + 'Minutes'
-  newEvent.value.eventDuration = selectedDuration.value.slice(0,3)
+  const newDuration = selectedDuration.value.split(' ' , 1)
+  newEvent.value.eventDuration = newDuration.toString()
 }
 
 const findDuration = (selectedCategoryId) => {
