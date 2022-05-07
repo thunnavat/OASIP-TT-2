@@ -30,9 +30,7 @@ const getEventCategories = async () => {
 onBeforeMount(async () => {
   await getEvents()
   await getEventCategories()
-  events.value.sort((a, b) => {
-    return dayjs(b.eventStartTime) - dayjs(a.eventStartTime)
-  })
+  sortingEvent(events)
 })
 
 const removeEvent = async (deleteEventId) => {
@@ -59,12 +57,13 @@ const createNewEvent = async (newEvent) => {
       headers: {
         'content-type': 'application/json'
       },
-      body: JSON.stringify({ bookingName : newEvent.bookingName , eventCategoryName: newEvent.eventCategoryName , eventStartTime: newEvent.eventStartTime ,
+      body: JSON.stringify({ bookingName : newEvent.bookingName , eventCategoryId: newEvent.eventCategoryId , eventStartTime: newEvent.eventStartTime ,
       bookingEmail: newEvent.bookingEmail, eventNotes: newEvent.eventNotes, eventDuration: newEvent.eventDuration })
     })
     if (res.status === 201) {
       const addedEvent = await res.json()
       events.value.push(addedEvent)
+      sortingEvent(events)
       console.log('Added sucessfully')
     } else console.log('error, cannot be added')
   }
@@ -73,6 +72,10 @@ const createNewEvent = async (newEvent) => {
   }
  
 }
+
+const sortingEvent = (events) => events.value.sort((a, b) => { 
+  return dayjs(b.eventStartTime) - dayjs(a.eventStartTime)
+  })
 
 const currentEvent = ref({})
 const getDetail = (event) => {

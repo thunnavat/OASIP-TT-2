@@ -3,6 +3,7 @@ package sit.int221.oasipservice.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
@@ -27,6 +28,6 @@ public class Eventcategory {
 
     @JsonIgnore
     @OneToMany(mappedBy = "eventCategory")
-    private Set<sit.int221.oasipservice.entities.Event> events = new LinkedHashSet<>();
+    private Set<Event> events = new LinkedHashSet<>();
 
 }

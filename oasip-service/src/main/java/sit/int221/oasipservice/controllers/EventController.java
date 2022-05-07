@@ -1,6 +1,8 @@
 package sit.int221.oasipservice.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import sit.int221.oasipservice.dtos.EventDTO;
 import sit.int221.oasipservice.entities.Event;
 import sit.int221.oasipservice.services.EventService;
 
@@ -24,7 +26,8 @@ public class EventController {
     }
 
     @PostMapping("")
-    public Event create(@RequestBody Event newEvent) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public Event create(@RequestBody EventDTO newEvent) {
         return service.create(newEvent);
     }
 
