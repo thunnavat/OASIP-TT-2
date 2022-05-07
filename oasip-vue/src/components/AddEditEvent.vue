@@ -26,7 +26,6 @@ const newEvent = computed(() => {
   }
 })
 
-
 const selectedEventCategory = ref(0)
 const findDuration = () => {
   const selectedCategoryId = selectedEventCategory.value
