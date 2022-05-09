@@ -20,7 +20,6 @@ CREATE TABLE events (
  eventNotes VARCHAR(500) NULL,
  eventCategoryId INT NOT NULL,
  PRIMARY KEY (eventId),
- UNIQUE INDEX bookingEmail_UNIQUE (bookingEmail ASC) VISIBLE,
  INDEX fk_events_eventcategories_idx (eventCategoryId ASC) VISIBLE,
  CONSTRAINT fk_events_eventcategories
    FOREIGN KEY (eventCategoryId)
