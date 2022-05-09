@@ -115,7 +115,7 @@ const cancelform = () => {
       <show-detail :event="currentEvent" @close="closeModal" />
     </div>
   <!-- Show Event List -->
-  <div class="absolute inset-x-4 top-2/4">
+  <div>
     <h2 class="text-xl font-bold ">EVENT LISTS</h2>
     <div class="box-border p-4 border-t-8 border-black">
       <div class="font-semibold flex justify-center items-center text-black box-content bg-[#c4c4c4] h-96" v-if="events.length === 0">

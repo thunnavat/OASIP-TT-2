@@ -13,8 +13,8 @@ services:
 
   spring:
     build: ./oasip-service
-    ports:
-      - "8080:8080"
+    # ports:
+    #   - "8080:8080"
     depends_on:
       - db
     restart: on-failure
@@ -33,7 +33,7 @@ services:
     build: 
       context: "./oasip-vue"
       args:
-        - VITE_API_URL=http://ip21tt2.sit.kmutt.ac.th:8080/api
+        - VITE_API_URL=/tt2/api
     ports:
       - "80:80"
     depends_on:
