@@ -1,5 +1,8 @@
 CREATE DATABASE oasip DEFAULT CHARACTER SET utf8;
 USE oasip;
+CREATE USER 'test221'@'%'  IDENTIFIED by 'oasiptt2';
+GRANT ALL PRIVILEGES ON *.* TO 'test221'@'%';
+FLUSH PRIVILEGES;
 CREATE TABLE eventcategories (
  eventCategoryId INT NOT NULL AUTO_INCREMENT,
  eventCategoryName VARCHAR(100) NOT NULL,
@@ -23,7 +26,7 @@ CREATE TABLE events (
    FOREIGN KEY (eventCategoryId)
    REFERENCES eventcategories (eventCategoryId)
    ON DELETE NO ACTION
-   ON UPDATE NO ACTION)
+   ON UPDATE NO ACTION
 );
 INSERT INTO eventcategories (eventCategoryName,eventCategoryDescription,eventDuration)
 VALUES ('Project Management Clinic', 'ตารางนัดหมายนี้ใช้สำหรับนัดหมาย Project Management Clinic ในวิชา INT221 integrated project I', 30);

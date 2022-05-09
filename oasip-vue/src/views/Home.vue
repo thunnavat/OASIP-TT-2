@@ -5,54 +5,77 @@ import ShowDetail from '../components/ShowDetail.vue'
 import dayjs from 'dayjs'
 import AddEditEvent from '../components/AddEditEvent.vue'
 
+const url = import.meta.env.PROD ?  import.meta.env.VITE_API_URL : 'http://localhost:8080/api';
 const eventViews = ['ALL', 'DAY', 'CATEGORY', 'UPCOMING', 'PAST']
 const events = ref([])
+const eventCategories = ref([])
 const isModal = ref(false)
 const clickForBooking = ref(false)
+console.log(url);
 
 const getEvents = async () => {
-  const res = await fetch('http://localhost:8080/api/events')
+  const res = await fetch(`${url}/events`)
   if (res.status === 200) {
     events.value = await res.json()
     console.log('Get data')
   } else console.log('Error, cannot get data')
 }
+const getEventCategories = async () => {
+  const res = await fetch(`${url}/eventCategories`)
+  if (res.status === 200) {
+    eventCategories.value = await res.json()
+    console.log('Get event Category')
+  } else console.log('Error, cannot get event Category')
+}
 onBeforeMount(async () => {
   await getEvents()
-  events.value.sort((a, b) => {
-    return dayjs(b.eventStartTime) - dayjs(a.eventStartTime)
-  })
+  await getEventCategories()
+  sortingEvent(events)
 })
-// ดึงมาเเล้วติด Cors 
+
 const removeEvent = async (deleteEventId) => {
-  const res = await fetch(`http://localhost:8080/api/events/${deleteEventId}` , {
-    method:'DELETE'
-  })
-  if(res.status === 200 ){
-    events.value = events.value.filter((event) => event.eventId !== deleteEventId)
-    console.log('Can Delete');
-  }
-  else{
-    console.log('Error , cannot delete event')
+  if (confirm(`Do you want to delete event-id: ${deleteEventId} `) === true) {
+    const res = await fetch(`${url}/events/${deleteEventId}` , {
+      method:'DELETE'
+    })
+    if(res.status === 200 ){
+      events.value = events.value.filter((event) => event.id !== deleteEventId)
+    } else console.log('Error , cannot delete event')
+  } else {
+    console.log('cancel')
   }
 }
 
 const newestEvent = ref({})
 const createNewEvent = async (newEvent) => {
-  const res = await fetch('http://localhost:8080/api/events', {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json'
-    },
-    body: JSON.stringify({ bookingName : newEvent.bookingName , eventCategoryName: newEvent.eventCategoryName , eventStartTime: newEvent.eventStartTime ,
-     bookingEmail: newEvent.bookingEmail, eventNotes: newEvent.eventNotes, eventDuration: events.eventDuration })
-  })
-  if (res.status === 201) {
-    const addedEvent = await res.json()
-    events.value.push(addedEvent)
-    console.log('Added sucessfully')
-  } else console.log('error, cannot be added')
+  if(newEvent.bookingEmail === undefined){
+    alert('Please enter email address')
+  }
+  else if(Object.values(newEvent.bookingEmail).includes('@') && Object.values(newEvent.bookingEmail).includes('.')){
+    const res = await fetch(`${url}/events`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({ bookingName : newEvent.bookingName , eventCategoryId: newEvent.eventCategoryId , eventStartTime: newEvent.eventStartTime ,
+      bookingEmail: newEvent.bookingEmail, eventNotes: newEvent.eventNotes, eventDuration: newEvent.eventDuration })
+    })
+    if (res.status === 201) {
+      const addedEvent = await res.json()
+      events.value.push(addedEvent)
+      sortingEvent(events)
+      console.log('Added sucessfully')
+    } else console.log('error, cannot be added')
+  }
+  else{
+    alert('Please enter a valid email address')
+  }
+ 
 }
+
+const sortingEvent = (events) => events.value.sort((a, b) => { 
+  return dayjs(b.eventStartTime) - dayjs(a.eventStartTime)
+  })
 
 const currentEvent = ref({})
 const getDetail = (event) => {
@@ -81,8 +104,9 @@ const cancelform = () => {
     </select>
   </div>
     <add-edit-event v-show="clickForBooking"
-    @addmovie = createNewEvent
+    @addEvent = createNewEvent
     :events="newestEvent"
+    :eventCategories="eventCategories"
     @cancel = cancelform />
     <div>
   </div>
