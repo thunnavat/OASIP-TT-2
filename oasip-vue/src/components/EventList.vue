@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 dayjs.extend(utc)
 
-defineEmits(['detail'])
+defineEmits(['detail','deleteEvent'])
 const props = defineProps({
   events : {
    type: Array,
@@ -31,6 +31,8 @@ const props = defineProps({
           <span class="text-[#878787] mr-1">DURATION: </span><span class="mr-28">{{ event.eventDuration }} mins</span>  
         </li>
         <li class="relative mt-6">
+          <button @click="$emit('deleteEvent', event.eventId)" class="text-white bg-black mr-4 border border-solid hover:bg-[#855B52]  active:bg-cyan-600 font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3">
+            DELETE</button>
           <span class="grid justify-end leading-3 justify-items-center absolute bottom-0 right-0">
             <span class="iconify" data-icon="noto:bear" style="width: 38px; height: 38px;"></span>
             <span class="text-[#878787] font-bold underline hover:text-black" style="font-size: 11px;">MORE DETAILS</span>

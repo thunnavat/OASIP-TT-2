@@ -24,17 +24,18 @@ onBeforeMount(async () => {
   })
 })
 // ดึงมาเเล้วติด Cors 
-// const removeEvents = async (id) => {
-//   const res = await fetch(`http://localhost:8080/api/events/${id}` , {
-//     method:'DELETE'
-//   })
-//   if(res.status === 201 ){
-//     events.value = events.value.filter((event) => event.id !== id)
-//   }
-//   else{
-//     console.log('Error , cannot delete event')
-//   }
-// }
+const removeEvent = async (deleteEventId) => {
+  const res = await fetch(`http://localhost:8080/api/events/${deleteEventId}` , {
+    method:'DELETE'
+  })
+  if(res.status === 200 ){
+    events.value = events.value.filter((event) => event.eventId !== deleteEventId)
+    console.log('Can Delete');
+  }
+  else{
+    console.log('Error , cannot delete event')
+  }
+}
 
 const newestEvent = ref({})
 const createNewEvent = async (newEvent) => {
@@ -44,7 +45,7 @@ const createNewEvent = async (newEvent) => {
       'content-type': 'application/json'
     },
     body: JSON.stringify({ bookingName : newEvent.bookingName , eventCategoryName: newEvent.eventCategoryName , eventStartTime: newEvent.eventStartTime ,
-     bookingEmail: newEvent.bookingEmail, eventNotes: newEvent.eventNotes, eventDuration: newEvent.eventDuration })
+     bookingEmail: newEvent.bookingEmail, eventNotes: newEvent.eventNotes, eventDuration: events.eventDuration })
   })
   if (res.status === 201) {
     const addedEvent = await res.json()
@@ -97,7 +98,7 @@ const cancelform = () => {
         <span>EMPTY</span>
       </div>
       <div v-else>
-        <event-list :events="events" @detail="getDetail"/>
+        <event-list :events="events" @detail="getDetail" @deleteEvent="removeEvent"/>
       </div>
     </div>
   </div>
