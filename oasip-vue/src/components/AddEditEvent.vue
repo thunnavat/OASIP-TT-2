@@ -18,7 +18,7 @@ const props = defineProps ({
 const newEvent = computed(() => {
   return {
    bookingName : props.event.bookingName ,
-   eventStartTime : props.event.eventStartTime === undefined ? dayjs().utc().format() : props.event.eventStartTime,
+   eventStartTime : props.event.eventStartTime === undefined ? dayjs().utc().format('YYYY-MM-DDTHH:mm') : props.event.eventStartTime,
    eventDuration : props.event.eventDuration ,
    bookingEmail : props.event.bookingEmail ,
    eventNotes : props.event.eventNotes,
