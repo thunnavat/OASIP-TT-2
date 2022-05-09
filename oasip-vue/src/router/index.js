@@ -4,7 +4,7 @@ import AboutUs from '../views/AboutUs.vue'
 import  NotFound  from '../views/NotFound.vue'
 
 
-const history = createWebHistory()
+const history = createWebHistory(import.meta.env.BASE_URL)
 const routes = [  {path:'/' , name:'Home' , component:Home} ,
                   {path:'/about_us' , name:'AboutUs' , component:AboutUs},
                   {path: '/:catchNotMatchPath(.*)' , name: 'NotFound' , component: NotFound}]
