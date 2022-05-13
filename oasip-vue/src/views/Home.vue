@@ -58,7 +58,7 @@ const createNewEvent = async (newEvent) => {
         'content-type': 'application/json'
       },
       body: JSON.stringify({ bookingName : newEvent.bookingName , eventCategoryId: newEvent.eventCategoryId , eventStartTime: newEvent.eventStartTime ,
-      bookingEmail: newEvent.bookingEmail, eventNotes: newEvent.eventNotes, eventDuration: newEvent.eventDuration })
+      bookingEmail: newEvent.bookingEmail, eventNotes: newEvent.eventNotes })
     })
     if (res.status === 201) {
       const addedEvent = await res.json()
@@ -70,7 +70,28 @@ const createNewEvent = async (newEvent) => {
   else{
     alert('Please enter a valid email address')
   }
- 
+}
+const toEditMode = (currentEvent) => {
+  newestEvent.value = currentEvent
+  newestEvent.value.eventStartTime = dayjs(currentEvent.eventStartTime).format('YYYY-MM-DDTHH:mm')
+  clickForBooking.value = true
+}
+
+const updateEvent = async (updateEvent) => {
+  const res = await fetch(`${url}/events/${updateEvent.id}`, {
+    method: 'PUT',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      eventStartTime: updateEvent.eventStartTime, eventNotes: updateEvent.eventNotes
+    })
+  })
+  if (res.status === 200) {
+    const editedEvent = await res.json()
+    events.value = events.value.map((event) => event.id === editedEvent.id ? {...event, eventStartTime: editedEvent.eventStartTime, eventNotes: editedEvent.eventNotes} : event) 
+  } else console.log('Cannot update')
+  cancelform()
 }
 
 const sortingEvent = (events) => events.value.sort((a, b) => { 
@@ -103,17 +124,20 @@ const cancelform = () => {
       <option option value="ALL" v-for="(eventView, index) in eventViews" :key="index" class="font-bold">{{ eventView }}</option> 
     </select>
   </div>
-    <add-edit-event v-show="clickForBooking"
+  <!-- Show Add Event -->
+  <div>
+    <add-edit-event 
+    v-show="clickForBooking"
     @addEvent = createNewEvent
-    :events="newestEvent"
+    :event="newestEvent"
     :eventCategories="eventCategories"
-    @cancel = cancelform />
-    <div>
+    @cancel = cancelform 
+    @updateEvent = updateEvent />
   </div>
-    <!-- Show Detail -->
-    <div v-if="isModal">
-      <show-detail :event="currentEvent" @close="closeModal" />
-    </div>
+  <!-- Show Detail -->
+  <div v-if="isModal">
+    <show-detail :event="currentEvent" @close="closeModal" />
+  </div>
   <!-- Show Event List -->
   <div>
     <h2 class="text-xl font-bold ">EVENT LISTS</h2>
@@ -122,7 +146,7 @@ const cancelform = () => {
         <span>EMPTY</span>
       </div>
       <div v-else>
-        <event-list :events="events" @detail="getDetail" @deleteEvent="removeEvent"/>
+        <event-list :events="events" @detail="getDetail" @deleteEvent="removeEvent" @editEvent="toEditMode"/>
       </div>
     </div>
   </div>

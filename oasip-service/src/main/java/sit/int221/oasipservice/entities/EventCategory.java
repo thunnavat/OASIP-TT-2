@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Getter @Setter
 @Entity @Table(name = "eventcategories")
-public class Eventcategory {
+public class EventCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "eventCategoryId", nullable = false)

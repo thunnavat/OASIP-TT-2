@@ -1,21 +1,20 @@
 package sit.int221.oasipservice.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sit.int221.oasipservice.entities.Eventcategory;
-import sit.int221.oasipservice.repositories.EventcategoryRepository;
+import sit.int221.oasipservice.entities.EventCategory;
+import sit.int221.oasipservice.repositories.EventCategoryRepository;
 
 import java.util.List;
 
 @Service
 public class EventCategoryService {
-    private final EventcategoryRepository repository;
+    private final EventCategoryRepository repository;
 
-    public EventCategoryService(EventcategoryRepository repository) {
+    public EventCategoryService(EventCategoryRepository repository) {
         this.repository = repository;
     }
 
-    public List<Eventcategory> getEventCategories() {
+    public List<EventCategory> getEventCategories() {
         return repository.findAll();
     }
 }

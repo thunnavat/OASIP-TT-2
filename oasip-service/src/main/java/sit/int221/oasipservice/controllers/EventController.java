@@ -3,6 +3,7 @@ package sit.int221.oasipservice.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import sit.int221.oasipservice.dtos.EventDTO;
+import sit.int221.oasipservice.dtos.UpdateEventDTO;
 import sit.int221.oasipservice.entities.Event;
 import sit.int221.oasipservice.services.EventService;
 
@@ -34,6 +35,11 @@ public class EventController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Integer id) {
         service.delete(id);
+    }
+
+    @PutMapping("/{id}")
+    public Event update(@RequestBody UpdateEventDTO updateEvent, @PathVariable Integer id) {
+        return service.update(updateEvent, id);
     }
 
 }
