@@ -2,7 +2,6 @@ package sit.int221.oasipservice.entities;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -32,6 +31,6 @@ public class Event {
 
     @ManyToOne
     @JoinColumn(name = "eventCategoryId", nullable = false)
-    private Eventcategory eventCategory;
+    private EventCategory eventCategory;
 
 }

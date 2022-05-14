@@ -6,10 +6,7 @@ import lombok.Setter;
 import java.time.Instant;
 
 @Getter @Setter
-public class EventDTO {
-    private String bookingName;
-    private String bookingEmail;
+public class UpdateEventDTO {
     private Instant eventStartTime;
     private String eventNotes;
-    private Integer eventCategoryId;
 }

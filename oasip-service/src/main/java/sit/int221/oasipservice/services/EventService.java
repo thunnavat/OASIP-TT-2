@@ -6,10 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sit.int221.oasipservice.dtos.EventDTO;
+import sit.int221.oasipservice.dtos.UpdateEventDTO;
 import sit.int221.oasipservice.entities.Event;
-import sit.int221.oasipservice.entities.Eventcategory;
+import sit.int221.oasipservice.entities.EventCategory;
 import sit.int221.oasipservice.repositories.EventRepository;
-import sit.int221.oasipservice.repositories.EventcategoryRepository;
+import sit.int221.oasipservice.repositories.EventCategoryRepository;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class EventService {
     private final EventRepository eventRepository;
-    private final EventcategoryRepository eventcategoryRepository;
+    private final EventCategoryRepository eventCategoryRepository;
     private final ModelMapper modelMapper;
 
     public List<Event> getEvents() { return eventRepository.findAll(); }
@@ -31,12 +32,12 @@ public class EventService {
 
     public Event create(EventDTO newEvent) {
         Event event = modelMapper.map(newEvent, Event.class);
-        Eventcategory eventcategory = eventcategoryRepository.findById(event.getEventCategory().getId())
+        EventCategory eventCategory = eventCategoryRepository.findById(event.getEventCategory().getId())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Eventcategory" + event.getEventCategory().getId() + "id Does not exist"));
-        event.setEventCategory(eventcategory);
-        event.setEventDuration(eventcategory.getEventDuration());
         event.setId(null);
+        event.setEventCategory(eventCategory);
+        event.setEventDuration(eventCategory.getEventDuration());
 
         return eventRepository.saveAndFlush(event);
     }
@@ -46,6 +47,15 @@ public class EventService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Event id " + eventId + "Does not exist"));
         eventRepository.deleteById(eventId);
+    }
+
+    public Event update(UpdateEventDTO updateEvent, Integer eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Event id " + eventId + "Does not exist"));
+        event.setEventStartTime(updateEvent.getEventStartTime());
+        event.setEventNotes(updateEvent.getEventNotes());
+        return eventRepository.saveAndFlush(event);
     }
 
 }
