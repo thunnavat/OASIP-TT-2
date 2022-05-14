@@ -19,7 +19,7 @@ const newEvent = computed(() => {
   return {
     id: props.event.id,
     bookingName: props.event.bookingName ,
-    eventStartTime: props.event.eventStartTime === undefined ? dayjs().utc().format('YYYY-MM-DDTHH:mm') : props.event.eventStartTime,
+    eventStartTime: props.event.eventStartTime ,
     eventDuration: props.event.eventDuration ,
     bookingEmail: props.event.bookingEmail ,
     eventNotes: props.event.eventNotes,
@@ -35,6 +35,20 @@ const findDuration = () => {
   newEvent.value.eventDuration = eventCategory.eventDuration;
 } 
 
+const startTime = ref(dayjs().format('YYYY-MM-DDTHH:mm'))
+
+const past = ref(false)
+
+const changeStartTime = () => {
+  if(startTime.value < dayjs().format('YYYY-MM-DDTHH:mm')){
+    past.value = true
+  }
+  else{
+    newEvent.value.eventStartTime = startTime.value
+    past.value = false
+  }
+}
+
 </script>
 
 <template>
@@ -48,7 +62,8 @@ const findDuration = () => {
           <option v-for="eventCategory in eventCategories" :key="eventCategory.id" :value="eventCategory.id">{{ eventCategory.eventCategoryName }}</option>
         </select>
     </span>
-    <span class="font-bold"> StartTime : </span> <input  type="datetime-local" class="text-black border-2 border-black bg-zinc-300 "  min="2022-04-19T00:01" v-model="newEvent.eventStartTime">
+    <span v-show="past" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded absolute mx-20 top-44 ">Please enter your correct time <button @click="past = false">x</button></span>
+    <span class="font-bold"> StartTime : </span> <input  type="datetime-local" class="text-black border-2 border-black bg-zinc-300 "  min="2022-04-19T00:01" v-model="startTime" :onchange="changeStartTime">
    <span class="font-bold"> Duration : </span> <input disabled type="text" :value="newEvent.eventDuration" class="text-black border-2 border-black bg-zinc-300 opacity-50 hover:cursor-not-allowed" >
   </p>
   <p class="ml-4"> <span class="font-bold"> Notes : </span> <br> 
@@ -56,8 +71,8 @@ const findDuration = () => {
    <div>
      <button v-if="newEvent.id > 0"  @click="$emit('updateEvent', {id: newEvent.id, eventStartTime: dayjs(newEvent.eventStartTime).utc().format(), eventNotes: newEvent.eventNotes})" class="text-white bg-black mr-4 border border-solid hover:bg-[#855B52]  active:bg-cyan-600 font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3">
      Save</button>
-   <button v-else  @click= "$emit('addEvent', {bookingName : newEvent.bookingName , eventCategoryId: newEvent.eventCategoryId , eventStartTime: dayjs(newEvent.eventStartTime).utc().format(),
-     bookingEmail: newEvent.bookingEmail, eventNotes: newEvent.eventNotes} )"  class="text-white bg-black mr-4 border border-solid hover:bg-[#855B52]  active:bg-cyan-600 font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3">
+   <button :disabled="startTime < dayjs().format('YYYY-MM-DDTHH:mm')" v-else  @click= "$emit('addEvent', {bookingName : newEvent.bookingName , eventCategoryId: newEvent.eventCategoryId , eventStartTime: dayjs(newEvent.eventStartTime).utc().format(),
+     bookingEmail: newEvent.bookingEmail, eventNotes: newEvent.eventNotes} )"  class="text-white bg-black mr-4 border border-solid hover:bg-[#855B52]  active:bg-cyan-600 font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3 disabled:opacity-50 disabled:hover:cursor-not-allowed">
      Add</button>
    <button @click="$emit('cancel')" class="text-white bg-black mr-4 border border-solid hover:bg-[#855B52]  active:bg-cyan-600 font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3">Cancel</button>
    </div>
