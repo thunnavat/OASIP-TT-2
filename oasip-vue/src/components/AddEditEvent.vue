@@ -38,6 +38,7 @@ const findDuration = () => {
   console.log(newEvent.value.eventDuration);
 } 
 
+
 </script>
 
 <template>
