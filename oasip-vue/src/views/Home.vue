@@ -74,6 +74,7 @@ const createNewEvent = async (newEvent) => {
 const toEditMode = (currentEvent) => {
   newestEvent.value = currentEvent
   newestEvent.value.eventStartTime = dayjs(currentEvent.eventStartTime).format('YYYY-MM-DDTHH:mm')
+  newestEvent.value.eventCategoryId = currentEvent.eventCategory.id
   clickForBooking.value = true
 }
 
