@@ -31,6 +31,22 @@ public class EventService {
     }
 
     public Event create(EventDTO newEvent) {
+//        if (newEvent.getBookingName() == null || newEvent.getBookingName().length() > 100) {
+//            if (newEvent.getBookingName().length() > 100) {
+//                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Booking Name is more than 100 character");
+//            } else {
+//                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Booking Name is empty");
+//            }
+//        } else if(newEvent.getBookingEmail() == null) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Booking Email is empty");
+//        } else if(newEvent.getEventStartTime() == null) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Start time is empty");
+//        } else if(newEvent.getEventCategoryId() == null) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Event Category is empty");
+//        } else if(newEvent.getEventNotes().length() > 500) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Event Notes is more than 500 character");
+//        }
+
         Event event = modelMapper.map(newEvent, Event.class);
         EventCategory eventCategory = eventCategoryRepository.findById(event.getEventCategory().getId())
                 .orElseThrow(() -> new ResponseStatusException(

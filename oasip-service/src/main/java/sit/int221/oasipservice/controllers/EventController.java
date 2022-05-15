@@ -7,6 +7,7 @@ import sit.int221.oasipservice.dtos.UpdateEventDTO;
 import sit.int221.oasipservice.entities.Event;
 import sit.int221.oasipservice.services.EventService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -28,7 +29,7 @@ public class EventController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public Event create(@RequestBody EventDTO newEvent) {
+    public Event create(@Valid @RequestBody EventDTO newEvent) {
         return service.create(newEvent);
     }
 
