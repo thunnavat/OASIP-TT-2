@@ -46,12 +46,17 @@ const removeEvent = async (deleteEventId) => {
   }
 }
 
+
+const validateEmail = (email) => {
+  return String(email)
+    .toLowerCase()
+    .match(
+     /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    );
+};
 const newestEvent = ref({})
 const createNewEvent = async (newEvent) => {
-  if(newEvent.bookingEmail === undefined){
-    alert('Please enter email address')
-  }
-  else if(Object.values(newEvent.bookingEmail).includes('@') && Object.values(newEvent.bookingEmail).includes('.')){
+  if(validateEmail(newEvent.bookingEmail) !== null){
     const res = await fetch(`${url}/events`, {
       method: 'POST',
       headers: {
