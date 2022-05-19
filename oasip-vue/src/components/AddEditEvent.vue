@@ -37,15 +37,31 @@ const findDuration = () => {
 
 const startTime = ref(dayjs().format('YYYY-MM-DDTHH:mm'))
 const past = ref(false)
+const isDisabled = ref(true)
 
 const changeStartTime = () => {
-  if(startTime.value < dayjs().format('YYYY-MM-DDTHH:mm')){
-    past.value = true
+  if(newEvent.value.id === undefined){
+    if(startTime.value <= dayjs().format('YYYY-MM-DDTHH:mm')){
+      past.value = true
+      isDisabled.value = true
   }
-  else{
-    newEvent.value.eventStartTime = startTime.value
-    past.value = false
+    else{
+      newEvent.value.eventStartTime = startTime.value
+      past.value = false
+      isDisabled.value = false
   } 
+}
+  else{
+    if(newEvent.value.eventStartTime <= dayjs().format('YYYY-MM-DDTHH:mm')){
+      past.value = true
+      isDisabled.value = true
+    }
+    else{
+      past.value = false
+      isDisabled.value = false
+    }
+  }
+
 }
 
 
@@ -62,17 +78,18 @@ const changeStartTime = () => {
           <option v-for="eventCategory in eventCategories" :key="eventCategory.id" :value="eventCategory.id">{{ eventCategory.eventCategoryName }}</option>
         </select>
     </span>
-    <span v-show="past" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded absolute mx-20 top-44 ">Please enter your correct time <button @click="past = false">x</button></span>
+    <span v-show="past" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded absolute mx-20 top-44 ">Please enter future date and time <button @click="past = false">x</button></span>
     <span class="font-bold"> StartTime : </span> <input v-if="newEvent.id === undefined" type="datetime-local" class="text-black border-2 border-black bg-zinc-300 "  min="2022-04-19T00:01" v-model="startTime" :onchange="changeStartTime">
-                                                 <input v-else type="datetime-local" class="text-black border-2 border-black bg-zinc-300 "  min="2022-04-19T00:01" v-model="newEvent.eventStartTime">
+                                                 <input v-else type="datetime-local" class="text-black border-2 border-black bg-zinc-300 "  min="2022-04-19T00:01" v-model="newEvent.eventStartTime" :onchange="changeStartTime">
    <span class="font-bold"> Duration : </span> <input disabled type="text" :value="newEvent.eventDuration" class="text-black border-2 border-black bg-zinc-300 opacity-50 hover:cursor-not-allowed" >
   </p>
   <p class="ml-4"> <span class="font-bold"> Notes : </span> <br> 
    <textarea rows="4" maxlength="500" cols="180" class="border-2 border-black bg-zinc-300" v-model="newEvent.eventNotes"></textarea> <br>
    <div>
-     <button v-if="newEvent.id > 0" @click="$emit('updateEvent', {id: newEvent.id, eventStartTime: dayjs(newEvent.eventStartTime).utc().format(), eventNotes: newEvent.eventNotes})" class="text-white bg-black mr-4 border border-solid hover:bg-[#855B52]  active:bg-cyan-600 font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3">
+     <button :disabled="isDisabled" v-if="newEvent.id > 0" @click="$emit('updateEvent', {id: newEvent.id, eventStartTime: dayjs(newEvent.eventStartTime).utc().format(), eventNotes: newEvent.eventNotes})" class="text-white bg-black mr-4 border border-solid hover:bg-[#855B52]  active:bg-cyan-600 font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3
+     disabled:opacity-50 disabled:hover:cursor-not-allowed">
      Save</button>
-   <button :disabled="startTime < dayjs().format('YYYY-MM-DDTHH:mm')" v-else  @click= "$emit('addEvent', {bookingName : newEvent.bookingName , eventCategoryId: newEvent.eventCategoryId , eventStartTime: dayjs(newEvent.eventStartTime).utc().format(),
+   <button :disabled="isDisabled" v-else  @click= "$emit('addEvent', {bookingName : newEvent.bookingName , eventCategoryId: newEvent.eventCategoryId , eventStartTime: dayjs(newEvent.eventStartTime).utc().format(),
      bookingEmail: newEvent.bookingEmail, eventNotes: newEvent.eventNotes} )"  class="text-white bg-black mr-4 border border-solid hover:bg-[#855B52]  active:bg-cyan-600 font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3 disabled:opacity-50 disabled:hover:cursor-not-allowed">
      Add</button>
    <button @click="$emit('cancel')" class="text-white bg-black mr-4 border border-solid hover:bg-[#855B52]  active:bg-cyan-600 font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3">Cancel</button>
