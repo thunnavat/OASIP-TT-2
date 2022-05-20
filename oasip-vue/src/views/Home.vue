@@ -8,6 +8,7 @@ import AddEditEvent from '../components/AddEditEvent.vue'
 const url = import.meta.env.PROD ?  import.meta.env.VITE_API_URL : 'http://localhost:8080/api';
 const eventViews = ['ALL', 'DAY', 'CATEGORY', 'UPCOMING', 'PAST']
 const events = ref([])
+const event = ref([])
 const eventCategories = ref([])
 const isModal = ref(false)
 const clickForBooking = ref(false)
@@ -31,6 +32,7 @@ onBeforeMount(async () => {
   await getEvents()
   await getEventCategories()
   sortingEvent(events)
+  event.value = events.value
 })
 
 const removeEvent = async (deleteEventId) => {
@@ -118,6 +120,41 @@ const cancelform = () => {
   newestEvent.value = {}
   clickForBooking.value = false
 }
+
+const selectedType = ref('ALL')
+const selectedDate = ref(dayjs().format('YYYY-MM-DD'))
+const selectedCategory = ref('Project Management Clinic')
+const emptyMsg = ref('')
+const ascEvent = (events) => events.value.sort((a, b) => { 
+    return dayjs(a.eventStartTime) - dayjs(b.eventStartTime)
+ })
+const change = () => {
+events.value = event.value
+  if(selectedType.value === 'ALL'){
+    sortingEvent(events)
+    emptyMsg.value = 'EMPTY'
+  }
+  else if(selectedType.value === 'CATEGORY'){
+    events.value = events.value.filter((event) => event.eventCategory.eventCategoryName === selectedCategory.value)
+    sortingEvent(events)
+    emptyMsg.value = 'No Scheduled Events'
+  }
+  else if(selectedType.value === 'UPCOMING'){
+    events.value = events.value.filter((event) => dayjs(event.eventStartTime) >= dayjs())
+    ascEvent(events)
+    emptyMsg.value = 'No On-Going or Upcoming Events'
+  }
+  else if(selectedType.value === 'PAST'){
+    events.value = events.value.filter((event) => dayjs(event.eventStartTime) < dayjs())
+    sortingEvent(events)
+    emptyMsg.value = 'No Past Events'
+  }
+  else if(selectedType.value === 'DAY'){
+    events.value = events.value.filter((event) => dayjs(event.eventStartTime).format('YYYY-MM-DD') == selectedDate.value)
+    ascEvent(events)
+    emptyMsg.value = 'No Scheduled Events'
+  }
+}
 </script>
 
 <template>
@@ -126,10 +163,19 @@ const cancelform = () => {
     <button @click="clickForBooking = !clickForBooking" class="text-white bg-black mr-4 border border-solid hover:bg-[#855B52]  active:bg-cyan-600 font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3">
       BOOKING </button>
     <!-- Select Bar -->
-    <select id="select-bar" class="select ml-4 mb-6 mt-3  text-black bg-blue-300 rounded font-bold">
-      <option option value="ALL" v-for="(eventView, index) in eventViews" :key="index" class="font-bold">{{ eventView }}</option> 
+    <select id="select-bar" class="select ml-4 mb-6 mt-3  text-black bg-blue-300 rounded font-bold" v-model="selectedType" :onchange="change">
+      <option v-for="(eventView, index) in eventViews" :key="index" class="font-bold">{{ eventView }}</option> 
     </select>
+    <!-- User Select Specific day or category -->
+    <div class="absolute top-10 right-5">
+      <input type="date" v-show="selectedType === 'DAY'" v-model="selectedDate" :onchange="change">
+      
+      <select v-show="selectedType === 'CATEGORY'" id="select-bar" v-model="selectedCategory"  :onchange="change">
+       <option v-for="(eventCategory, index) in eventCategories" :key="index" class="font-bold">{{ eventCategory.eventCategoryName }}</option> 
+     </select>
+    </div>
   </div>
+
   <!-- Show Add Event -->
   <div>
     <add-edit-event 
@@ -149,7 +195,7 @@ const cancelform = () => {
     <h2 class="text-xl font-bold ">EVENT LISTS</h2>
     <div class="box-border p-4 border-t-8 border-black">
       <div class="font-semibold flex justify-center items-center text-black box-content bg-[#c4c4c4] h-96" v-if="events.length === 0">
-        <span>EMPTY</span>
+        <span>{{emptyMsg}}</span>
       </div>
       <div v-else>
         <event-list :events="events" @detail="getDetail" @deleteEvent="removeEvent" @editEvent="toEditMode"/>
