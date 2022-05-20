@@ -7,7 +7,7 @@ import javax.validation.constraints.*;
 import java.time.Instant;
 
 @Getter @Setter
-public class EventDTO {
+public class CreateEventDTO {
     @NotBlank(message = "Booking name is empty")
     @Size(max = 100, message = "Booking name is more than 100 char")
     private String bookingName;

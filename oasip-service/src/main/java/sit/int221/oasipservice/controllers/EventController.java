@@ -2,12 +2,13 @@ package sit.int221.oasipservice.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import sit.int221.oasipservice.dtos.EventDTO;
+import sit.int221.oasipservice.dtos.CreateEventDTO;
 import sit.int221.oasipservice.dtos.UpdateEventDTO;
 import sit.int221.oasipservice.entities.Event;
 import sit.int221.oasipservice.services.EventService;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -27,9 +28,14 @@ public class EventController {
         return service.getEventById(id);
     }
 
+    @GetMapping("/{eventCategoryId}/{date}")
+    public List<Event> getEventsByCategoryDateAndDate(@PathVariable Integer eventCategoryId, @PathVariable LocalDate date) {
+        return service.getEventsByCategoryAndDate(eventCategoryId, date);
+    }
+
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public Event create(@Valid @RequestBody EventDTO newEvent) {
+    public Event create(@Valid @RequestBody CreateEventDTO newEvent) {
         return service.create(newEvent);
     }
 
@@ -39,7 +45,7 @@ public class EventController {
     }
 
     @PutMapping("/{id}")
-    public Event update(@RequestBody UpdateEventDTO updateEvent, @PathVariable Integer id) {
+    public Event update(@Valid @RequestBody UpdateEventDTO updateEvent, @PathVariable Integer id) {
         return service.update(updateEvent, id);
     }
 

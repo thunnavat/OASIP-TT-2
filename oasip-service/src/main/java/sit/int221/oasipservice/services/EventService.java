@@ -5,14 +5,17 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import sit.int221.oasipservice.dtos.EventDTO;
+import sit.int221.oasipservice.dtos.CreateEventDTO;
 import sit.int221.oasipservice.dtos.UpdateEventDTO;
 import sit.int221.oasipservice.entities.Event;
 import sit.int221.oasipservice.entities.EventCategory;
 import sit.int221.oasipservice.repositories.EventRepository;
 import sit.int221.oasipservice.repositories.EventCategoryRepository;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -30,27 +33,21 @@ public class EventService {
         return  event;
     }
 
-    public Event create(EventDTO newEvent) {
-//        if (newEvent.getBookingName() == null || newEvent.getBookingName().length() > 100) {
-//            if (newEvent.getBookingName().length() > 100) {
-//                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Booking Name is more than 100 character");
-//            } else {
-//                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Booking Name is empty");
-//            }
-//        } else if(newEvent.getBookingEmail() == null) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Booking Email is empty");
-//        } else if(newEvent.getEventStartTime() == null) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Start time is empty");
-//        } else if(newEvent.getEventCategoryId() == null) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Event Category is empty");
-//        } else if(newEvent.getEventNotes().length() > 500) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Event Notes is more than 500 character");
-//        }
+    public List<Event> getEventsByCategoryAndDate(Integer eventCategoryId, LocalDate date) {
+        List<Event> event = eventRepository.findByEventCategoryIdAndDate(eventCategoryId, date);
+        return event;
+    }
+
+    public Event create(CreateEventDTO newEvent) {
+        EventCategory eventCategory = eventCategoryRepository.findById(newEvent.getEventCategoryId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Eventcategory" + newEvent.getEventCategoryId() + "id Does not exist"));
+
+        Instant endTime = newEvent.getEventStartTime().plusSeconds(eventCategory.getEventDuration() * 60);
+        List<Event> eventsOverlap = eventRepository.findOverlapTimeByEventCategoryId(newEvent.getEventStartTime(), endTime, eventCategory.getId());
+        if (eventsOverlap.size() != 0) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "overlap");
 
         Event event = modelMapper.map(newEvent, Event.class);
-        EventCategory eventCategory = eventCategoryRepository.findById(event.getEventCategory().getId())
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Eventcategory" + event.getEventCategory().getId() + "id Does not exist"));
         event.setId(null);
         event.setEventCategory(eventCategory);
         event.setEventDuration(eventCategory.getEventDuration());

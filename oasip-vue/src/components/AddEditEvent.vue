@@ -29,8 +29,7 @@ const newEvent = computed(() => {
 
 const selectedEventCategory = ref(0)
 const findDuration = () => {
-  const selectedCategoryId = selectedEventCategory.value
-  const eventCategory = props.eventCategories.find(eventCategory => eventCategory.id === selectedCategoryId)
+  const eventCategory = props.eventCategories.find(eventCategory => eventCategory.id === selectedEventCategory.value)
   newEvent.value.eventCategoryId = selectedEventCategory.value
   newEvent.value.eventDuration = eventCategory.eventDuration;
 } 
@@ -40,30 +39,41 @@ const past = ref(false)
 const isDisabled = ref(true)
 
 const changeStartTime = () => {
-  if(newEvent.value.id === undefined){
-    if(startTime.value <= dayjs().format('YYYY-MM-DDTHH:mm')){
+  if(newEvent.value.id === undefined) {
+    if(startTime.value <= dayjs().format('YYYY-MM-DDTHH:mm')) {
       past.value = true
       isDisabled.value = true
-  }
-    else{
+    } else {
       newEvent.value.eventStartTime = startTime.value
       past.value = false
       isDisabled.value = false
-  } 
-}
-  else{
+    } 
+  } else {
     if(newEvent.value.eventStartTime <= dayjs().format('YYYY-MM-DDTHH:mm')){
       past.value = true
       isDisabled.value = true
     }
-    else{
+    else {
       past.value = false
       isDisabled.value = false
     }
   }
-
 }
 
+const url = import.meta.env.PROD ?  import.meta.env.VITE_API_URL : 'http://localhost:8080/api';
+const eventsByDateAndCategory = ref([])
+
+const getEventsByDateAndCategory = async (eventCategoryId, date) => {
+  const res = await fetch(`${url}/${eventCategoryId}/${date}`)
+  if(res.status === 200) {
+    eventsByDateAndCategory.value = await res.json()
+  } else console.log('Cannot get events by date and category')
+}
+
+// const checkOverlapTime = () => {
+//   getEventsByDateAndCategory()
+//   eventsByDateAndCategory.value.some(event => event.eventCategory.id === newEvent.)
+// }
 
 </script>
 
