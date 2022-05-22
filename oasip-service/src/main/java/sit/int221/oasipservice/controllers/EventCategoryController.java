@@ -1,11 +1,11 @@
 package sit.int221.oasipservice.controllers;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import sit.int221.oasipservice.dtos.UpdateEventCategoryDTO;
 import sit.int221.oasipservice.entities.EventCategory;
 import sit.int221.oasipservice.services.EventCategoryService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,5 +20,10 @@ public class EventCategoryController {
     @GetMapping("")
     public List<EventCategory> getEventCategories() {
         return service.getEventCategories();
+    }
+
+    @PutMapping("/{id}")
+    public EventCategory update(@Valid @RequestBody UpdateEventCategoryDTO updateEventCategory, @PathVariable Integer id) {
+        return service.update(updateEventCategory, id);
     }
 }

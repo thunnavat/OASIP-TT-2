@@ -12,6 +12,7 @@
       <div class="w-full block flex-grow sm:flex sm:items-center sm:w-auto">
         <div class="text-sm sm:flex-grow font-medium">
           <router-link :to="{name:'Home'}" class="block mt-4 sm:inline-block sm:mt-0 text-white hover:text-gray-300 ml-4">Home</router-link>
+          <router-link :to="{name:'EventCategory'}" class="block mt-4 sm:inline-block sm:mt-0 text-white hover:text-gray-300 ml-4">EventCategory</router-link>
           <router-link :to="{name:'AboutUs'}" class="block mt-4 sm:inline-block sm:mt-0 text-white hover:text-gray-300 ml-4">About Us</router-link>
         </div> 
       </div>

@@ -33,8 +33,8 @@ public class EventService {
         return  event;
     }
 
-    public List<Event> getEventsByCategoryAndDate(Integer eventCategoryId, LocalDate date) {
-        List<Event> event = eventRepository.findByEventCategoryIdAndDate(eventCategoryId, date);
+    public List<Event> getEventsByCategoryAndDate(Integer eventCategoryId, Instant startDateMidNightTime) {
+        List<Event> event = eventRepository.findByEventCategoryIdAndDate(eventCategoryId, startDateMidNightTime);
         return event;
     }
 
@@ -66,6 +66,14 @@ public class EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Event id " + eventId + "Does not exist"));
+        EventCategory eventCategory = eventCategoryRepository.findById(event.getEventCategory().getId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Eventcategory" + event.getEventCategory().getId() + "id Does not exist"));
+
+        Instant endTime = updateEvent.getEventStartTime().plusSeconds(eventCategory.getEventDuration() * 60);
+        List<Event> eventsOverlap = eventRepository.findOverlapTimeByEventCategoryId(updateEvent.getEventStartTime(), endTime, eventCategory.getId());
+        if (eventsOverlap.size() != 0) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "overlap");
+        
         event.setEventStartTime(updateEvent.getEventStartTime());
         event.setEventNotes(updateEvent.getEventNotes());
         return eventRepository.saveAndFlush(event);

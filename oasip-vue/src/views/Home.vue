@@ -48,17 +48,9 @@ const removeEvent = async (deleteEventId) => {
   }
 }
 
-
-const validateEmail = (email) => {
-  return String(email)
-    .toLowerCase()
-    .match(
-     /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    );
-};
 const newestEvent = ref({})
 const createNewEvent = async (newEvent) => {
-  if(validateEmail(newEvent.bookingEmail) !== null){
+  
     const res = await fetch(`${url}/events`, {
       method: 'POST',
       headers: {
@@ -73,10 +65,7 @@ const createNewEvent = async (newEvent) => {
       sortingEvent(events)
       console.log('Added sucessfully')
     } else console.log('error, cannot be added')
-  }
-  else{
-    alert('Please enter a valid email address')
-  }
+  
 }
 const toEditMode = (currentEvent) => {
   newestEvent.value = currentEvent
@@ -124,7 +113,7 @@ const cancelform = () => {
 const selectedType = ref('ALL')
 const selectedDate = ref(dayjs().format('YYYY-MM-DD'))
 const selectedCategory = ref('Project Management Clinic')
-const emptyMsg = ref('')
+const emptyMsg = ref('EMPTY')
 const ascEvent = (events) => events.value.sort((a, b) => { 
     return dayjs(a.eventStartTime) - dayjs(b.eventStartTime)
  })
@@ -150,11 +139,14 @@ events.value = event.value
     emptyMsg.value = 'No Past Events'
   }
   else if(selectedType.value === 'DAY'){
-    events.value = events.value.filter((event) => dayjs(event.eventStartTime).format('YYYY-MM-DD') == selectedDate.value)
+    events.value = events.value.filter((event) => dayjs(event.eventStartTime).format('YYYY-MM-DD') === selectedDate.value)
     ascEvent(events)
     emptyMsg.value = 'No Scheduled Events'
   }
 }
+
+const unique = events.value.filter((item, i, ar) => ar.indexOf(item) === i);
+console.log(unique);
 </script>
 
 <template>
@@ -163,7 +155,7 @@ events.value = event.value
     <button @click="clickForBooking = !clickForBooking" class="text-white bg-black mr-4 border border-solid hover:bg-[#855B52]  active:bg-cyan-600 font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3">
       BOOKING </button>
     <!-- Select Bar -->
-    <select id="select-bar" class="select ml-4 mb-6 mt-3  text-black bg-blue-300 rounded font-bold" v-model="selectedType" :onchange="change">
+    <select id="select-bar" class="select ml-4 mb-6 mt-3 mr-4  text-black bg-blue-300 rounded font-bold" v-model="selectedType" :onchange="change">
       <option v-for="(eventView, index) in eventViews" :key="index" class="font-bold">{{ eventView }}</option> 
     </select>
     <!-- User Select Specific day or category -->
@@ -192,10 +184,10 @@ events.value = event.value
   </div>
   <!-- Show Event List -->
   <div>
-    <h2 class="text-xl font-bold ">EVENT LISTS</h2>
+    <h2 class="text-xl font-bold ml-4 mt-4">EVENT LISTS</h2>
     <div class="box-border p-4 border-t-8 border-black">
       <div class="font-semibold flex justify-center items-center text-black box-content bg-[#c4c4c4] h-96" v-if="events.length === 0">
-        <span>{{emptyMsg}}</span>
+        <span>{{ emptyMsg }}</span>
       </div>
       <div v-else>
         <event-list :events="events" @detail="getDetail" @deleteEvent="removeEvent" @editEvent="toEditMode"/>

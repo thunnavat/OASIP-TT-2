@@ -22,9 +22,9 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     List<Event> findByEventCategoryIdAndDate(Integer eventCategoryId, Instant dateTimeMidnight, Instant dateTimeMidnightNextDay);
 
 
-    default List<Event> findByEventCategoryIdAndDate(Integer eventCategoryId, LocalDate date) {
-        Instant dateTimeMidnight = date.atStartOfDay().toInstant(ZoneOffset.UTC);
-        Instant dateTimeMidnightNextDay = dateTimeMidnight.plus(1, ChronoUnit.DAYS);
-        return findByEventCategoryIdAndDate(eventCategoryId, dateTimeMidnight, dateTimeMidnightNextDay);
+    default List<Event> findByEventCategoryIdAndDate(Integer eventCategoryId, Instant startDateMidNightTime) {
+        Instant dateTimeMidnightNextDay = startDateMidNightTime.plus(1, ChronoUnit.DAYS);
+        return findByEventCategoryIdAndDate(eventCategoryId, startDateMidNightTime, dateTimeMidnightNextDay);
     }
+
 }

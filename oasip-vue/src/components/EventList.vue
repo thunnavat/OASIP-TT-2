@@ -4,7 +4,7 @@ import utc from 'dayjs/plugin/utc'
 dayjs.extend(utc)
 
 defineEmits(['detail','deleteEvent','editEvent'])
-const props = defineProps({
+defineProps({
   events : {
    type: Array,
    default: []
@@ -15,7 +15,7 @@ const props = defineProps({
  
 <template>
 <div>
-  <div class="grid grid-cols-5 gap-1 bg-[#c4c4c4] p-4"> 
+  <div class="grid grid-cols-1 gap-1 2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 bg-[#c4c4c4] p-4"> 
     <div v-for="event in events" :key="event.id"  class="bg-white m-4 px-4 pt-2 pb-4 leading-8 border-4 rounded border-stone-900 text-sm">
       <ul>
         <li class="flex justify-end font-bold ">

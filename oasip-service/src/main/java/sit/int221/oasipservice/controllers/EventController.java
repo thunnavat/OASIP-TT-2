@@ -1,5 +1,6 @@
 package sit.int221.oasipservice.controllers;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import sit.int221.oasipservice.dtos.CreateEventDTO;
@@ -8,7 +9,7 @@ import sit.int221.oasipservice.entities.Event;
 import sit.int221.oasipservice.services.EventService;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -28,9 +29,9 @@ public class EventController {
         return service.getEventById(id);
     }
 
-    @GetMapping("/{eventCategoryId}/{date}")
-    public List<Event> getEventsByCategoryDateAndDate(@PathVariable Integer eventCategoryId, @PathVariable LocalDate date) {
-        return service.getEventsByCategoryAndDate(eventCategoryId, date);
+    @GetMapping("/{eventCategoryId}/{startDateMidNightTime}")
+    public List<Event> getEventsByCategoryDateAndDate(@PathVariable Integer eventCategoryId, @PathVariable Instant startDateMidNightTime) {
+        return service.getEventsByCategoryAndDate(eventCategoryId, startDateMidNightTime);
     }
 
     @PostMapping("")
@@ -50,3 +51,4 @@ public class EventController {
     }
 
 }
+
