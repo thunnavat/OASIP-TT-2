@@ -50,22 +50,21 @@ const removeEvent = async (deleteEventId) => {
 
 const newestEvent = ref({})
 const createNewEvent = async (newEvent) => {
-  
-    const res = await fetch(`${url}/events`, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify({ bookingName : newEvent.bookingName , eventCategoryId: newEvent.eventCategoryId , eventStartTime: newEvent.eventStartTime ,
-      bookingEmail: newEvent.bookingEmail, eventNotes: newEvent.eventNotes })
-    })
-    if (res.status === 201) {
-      const addedEvent = await res.json()
-      events.value.push(addedEvent)
-      sortingEvent(events)
-      console.log('Added sucessfully')
-    } else console.log('error, cannot be added')
-  
+  const res = await fetch(`${url}/events`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify({ bookingName : newEvent.bookingName , eventCategoryId: newEvent.eventCategoryId , eventStartTime: newEvent.eventStartTime ,
+    bookingEmail: newEvent.bookingEmail, eventNotes: newEvent.eventNotes })
+  })
+  if (res.status === 201) {
+    const addedEvent = await res.json()
+    events.value.push(addedEvent)
+    sortingEvent(events)
+    alert('Added successfully')
+  } else console.log('error, cannot be added')
+  cancelform()
 }
 const toEditMode = (currentEvent) => {
   newestEvent.value = currentEvent

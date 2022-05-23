@@ -104,6 +104,7 @@ const checkOverlapTime = async (eventCategoryId, startDateTime) => {
       checkDate.value = !checkDate.value
     }
   }
+  console.log(eventsByDateAndCategory.value)
 }
 
 const validateEmail = () => {
@@ -144,6 +145,10 @@ const check = () => {
     checkEmailNull.value = false
   }
 }
+
+console.log(dayjs().format())
+console.log(dayjs().utc().startOf('day').format())
+console.log(dayjs().startOf('day').utc().format())
 
 </script>
 
