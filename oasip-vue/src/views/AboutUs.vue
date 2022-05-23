@@ -1,5 +1,5 @@
 <script setup>
-const img = '../src/assets/winter.gif'
+const img = 'winter.gif'
 </script>
  
 <template>
