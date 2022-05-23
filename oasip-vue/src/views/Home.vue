@@ -86,6 +86,7 @@ const updateEvent = async (updateEvent) => {
   if (res.status === 200) {
     const editedEvent = await res.json()
     events.value = events.value.map((event) => event.id === editedEvent.id ? {...event, eventStartTime: editedEvent.eventStartTime, eventNotes: editedEvent.eventNotes} : event) 
+    alert('Updated successfully')  
   } else console.log('Cannot update')
   cancelform()
 }
@@ -151,8 +152,7 @@ console.log(unique);
 <template>
 <div>
   <div class="mt-4 flex justify-end">
-    <button @click="clickForBooking = !clickForBooking" class="text-white bg-black mr-4 border border-solid hover:bg-[#855B52]  active:bg-cyan-600 font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3">
-      BOOKING </button>
+    <button @click="clickForBooking = !clickForBooking" class="text-white bg-black mr-4 border border-solid hover:bg-[#855B52]  active:bg-cyan-600 font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3"> BOOKING </button>
     <!-- Select Bar -->
     <select id="select-bar" class="select ml-4 mb-6 mt-3 mr-4  text-black bg-blue-300 rounded font-bold" v-model="selectedType" :onchange="change">
       <option v-for="(eventView, index) in eventViews" :key="index" class="font-bold">{{ eventView }}</option> 
@@ -160,7 +160,6 @@ console.log(unique);
     <!-- User Select Specific day or category -->
     <div class="absolute top-10 right-5">
       <input type="date" v-show="selectedType === 'DAY'" v-model="selectedDate" :onchange="change">
-      
       <select v-show="selectedType === 'CATEGORY'" id="select-bar" v-model="selectedCategory"  :onchange="change">
        <option v-for="(eventCategory, index) in eventCategories" :key="index" class="font-bold">{{ eventCategory.eventCategoryName }}</option> 
      </select>

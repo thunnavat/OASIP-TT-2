@@ -40,7 +40,8 @@ const updateEventCategory = async (updateEventCategory) => {
   if (res.status === 200) {
     const editedEventCategory = await res.json()
     eventCategories.value = eventCategories.value.map((eventCategory) => eventCategory.id === editedEventCategory.id ? {...eventCategory, eventCategoryName: editedEventCategory.eventCategoryName, eventCategoryDescription: editedEventCategory.eventCategoryDescription, eventDuration: editedEventCategory.eventDuration} : eventCategory) 
-  } else console.log('Cannot update')
+    alert('Updated successfully')  
+ } else console.log('Cannot update')
   cancelform()
 }
 
