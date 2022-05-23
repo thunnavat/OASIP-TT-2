@@ -34,15 +34,11 @@ const disable = () => {
 
 const repeatablename = ref(false)
 const uniqueName = () => {
-  
   const categoryByName = props.eventCategories.find(e => e.eventCategoryName.trim().toLowerCase() === newEventCategory.value.eventCategoryName.trim().toLowerCase())
-  if(categoryByName !== undefined) {
-    if(categoryByName.id !== newEventCategory.value.id) {
+  if(categoryByName !== undefined && categoryByName.id !== newEventCategory.value.id) {
     isDisabled.value = true
     repeatablename.value = true
-    }
-  }
-  else{
+  } else {
     isDisabled.value = false
     repeatablename.value = false
   }
