@@ -145,9 +145,6 @@ const check = () => {
   }
 }
 
-console.log(dayjs().format());
-console.log(dayjs().utc().startOf('day').format())
-
 </script>
 
 <template>
