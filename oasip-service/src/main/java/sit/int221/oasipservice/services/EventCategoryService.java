@@ -26,7 +26,7 @@ public class EventCategoryService {
     public EventCategory update(UpdateEventCategoryDTO updateEventCategory, Integer eventCategoryId) {
         EventCategory eventCategoryByName = repository
                 .findByEventCategoryNameIgnoreCase(updateEventCategory.getEventCategoryName().trim());
-        if(eventCategoryByName.getId() != eventCategoryId){
+        if(eventCategoryByName != null && eventCategoryByName.getId() != eventCategoryId){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Event category name is repeat");
         }
 
