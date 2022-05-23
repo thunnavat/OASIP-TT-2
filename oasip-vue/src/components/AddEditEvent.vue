@@ -153,7 +153,7 @@ const check = () => {
     <h1 class="text-xl font-bold mb-3 ml-4">ADD NEW EVENT</h1>
     <span>
       
-    <span v-show="noCategory" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded absolute mx-20 top-44 ">Please Select Category <button @click="noCategory = false">x</button></span>
+    <span v-show="noCategory" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded absolute mx-24 top-40 ">Please Select Category <button @click="noCategory = false">x</button></span>
       <span class="font-bold ml-4"> Category : </span> 
       <!-- ใช้ if else เเสดง eventCategories ตอนกด edit ได้เเต่โค๊ตมันจะซ้ำๆนะ ถ้าไม่โอเคเปลี่ยนกลับเป็นโค็ตเดิมได้เลย ^_^ -->
       <!-- <select :disabled="newEvent.id > 0" class="border-2  border-black text-black ml-1 mt-2 bg-zinc-300 disabled:hover:cursor-not-allowed" v-model="selectedEventCategory" :onchange="findDuration">

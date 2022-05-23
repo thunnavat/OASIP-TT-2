@@ -43,9 +43,9 @@ public class EventService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Eventcategory" + newEvent.getEventCategoryId() + "id Does not exist"));
 
-        Instant endTime = newEvent.getEventStartTime().plusSeconds(eventCategory.getEventDuration() * 60);
-        List<Event> eventsOverlap = eventRepository.findOverlapTimeByEventCategoryId(newEvent.getEventStartTime(), endTime, eventCategory.getId());
-        if (eventsOverlap.size() != 0) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "overlap");
+//        Instant endTime = newEvent.getEventStartTime().plusSeconds(eventCategory.getEventDuration() * 60);
+//        List<Event> eventsOverlap = eventRepository.findOverlapTimeByEventCategoryId(newEvent.getEventStartTime(), endTime, eventCategory.getId());
+//        if (eventsOverlap.size() != 0) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "overlap");
 
         Event event = modelMapper.map(newEvent, Event.class);
         event.setId(null);
