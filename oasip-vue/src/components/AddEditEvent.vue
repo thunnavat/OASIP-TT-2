@@ -47,6 +47,7 @@ const checkEmailNull = ref(false)
 const noName = ref(false)
 const isOverlap = ref(false)
 const checkDate = ref(false)
+const descErrMsg = ref(false)
 
 const changeStartTime = () => {
   noStartTime.value = false
@@ -128,7 +129,7 @@ const check = () => {
     checkEmailNull.value = true
     noName.value = true
   }
-  else if(newEvent.value.bookingName === undefined || newEvent.value.bookingName === ''){
+  else if(newEvent.value.bookingName === undefined || newEvent.value.bookingName === '' || newEvent.value.bookingName.length > 100){
     isDisabled.value = true
     noName.value = true
   }
@@ -145,6 +146,16 @@ const check = () => {
     checkEmailNull.value = false
   }
 }
+
+const checkName = () => {
+  if(newEvent.value.bookingName === undefined || newEvent.value.bookingName === '' || newEvent.value.bookingName.length > 100){
+    isDisabled.value = true
+    noName.value = true
+  }else{
+    isDisabled.value = false
+    noName.value = false
+  }
+}
 const clear = () => {
   selectedEventCategory.value = 0
   startTime.value = dayjs().format('YYYY-MM-DDTHH:mm')
@@ -154,9 +165,14 @@ const clear = () => {
   checkEmailNull.value = false
   noValidEmail.value = false
 }
-// console.log(dayjs().format())
-// console.log(dayjs().utc().startOf('day').format())
-console.log(dayjs().startOf('day').utc().format())
+
+const checkDesc = () => {
+  if(newEvent.value.eventNotes.length > 500){
+    descErrMsg.value = true
+  }else{
+    descErrMsg.value = false
+  }
+}
 
 </script>
 
@@ -185,14 +201,15 @@ console.log(dayjs().startOf('day').utc().format())
     </div>
     <div v-show="(showNotes || newEvent.id > 0) && !checkDate">
 
-    <p class="ml-4 "> <span class="font-bold"> Name : </span>  <input type="text" :disabled="newEvent.id > 0" maxlength="100" class="border-2 border-black text-black ml-1 mt-2 bg-zinc-300 disabled:opacity-50 disabled:hover:cursor-not-allowed	" v-model="newEvent.bookingName" @click="noName = false" > 
-    <span v-show="noName" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mx-2 ">Name must not be empty <button @click=" noName = false">x</button></span>
+    <p class="ml-4 "> <span class="font-bold"> Name : </span>  <input type="text" :disabled="newEvent.id > 0" maxlength="101" class="border-2 border-black text-black ml-1 mt-2 bg-zinc-300 disabled:opacity-50 disabled:hover:cursor-not-allowed	" v-model="newEvent.bookingName" @click="noName = false" :onchange="checkName"> 
+    <span v-show="noName" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mx-2 ">Name must be between 1 to 100 characters <button @click=" noName = false">x</button></span>
       <span class="font-bold"> Email : </span> <input type="email" :disabled="newEvent.id > 0" maxlength="100"  class="border-2 border-black text-black ml-1 mt-2 bg-zinc-300 disabled:opacity-50 disabled:hover:cursor-not-allowed" v-model="newEvent.bookingEmail"  :onchange="check">
           <span v-show="noValidEmail" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded absolute mx-20 right">Not a valid Email Address format <button @click=" noValidEmail = false">x</button></span>
           <span v-show="checkEmailNull" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded absolute mx-20 right">Email Address must not be empty  <button @click=" checkEmailNull = false">x</button></span>
     </p>
     <p class="ml-4"> <span class="font-bold"> Notes : </span> <br> 
-    <textarea rows="4" maxlength="500" cols="180" class="border-2 border-black bg-zinc-300" v-model="newEvent.eventNotes"></textarea> <br>
+    <span v-show="descErrMsg" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded absolute mx-20 right">Description must be between 0 to 500 characters  <button @click=" descErrMsg = false">x</button></span>
+    <textarea rows="4" maxlength="501" cols="180" class="border-2 border-black bg-zinc-300" v-model="newEvent.eventNotes" :onchange="checkDesc"></textarea> <br>
     <div>
       <button :disabled="isDisabled" v-if="newEvent.id > 0" @click="changeStartTime() , isDisabled === true ? '' : $emit('updateEvent', {id: newEvent.id, eventStartTime: dayjs(newEvent.eventStartTime).utc().format(), eventNotes: newEvent.eventNotes}) " class="text-white bg-black mr-4 border border-solid hover:bg-[#855B52]  active:bg-cyan-600 font-bold uppercase text-sm py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 active show px-3
       disabled:opacity-50 disabled:hover:cursor-not-allowed">
