@@ -45,7 +45,7 @@ public class EventService {
 
         Instant endTime = newEvent.getEventStartTime().plusSeconds(eventCategory.getEventDuration() * 60);
         List<Event> eventsOverlap = eventRepository.findOverlapTimeByEventCategoryId(newEvent.getEventStartTime(), endTime, eventCategory.getId());
-        if (eventsOverlap.size() != 0) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "overlap");
+        if (eventsOverlap.size() != 0) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Time is overlap");
 
         Event event = modelMapper.map(newEvent, Event.class);
         event.setId(null);
