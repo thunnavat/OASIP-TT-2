@@ -13,9 +13,8 @@ import sit.int221.oasipservice.repositories.EventRepository;
 import sit.int221.oasipservice.repositories.EventCategoryRepository;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
+
 
 @Service
 @AllArgsConstructor
@@ -66,6 +65,7 @@ public class EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Event id " + eventId + "Does not exist"));
+
         EventCategory eventCategory = eventCategoryRepository.findById(event.getEventCategory().getId())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Eventcategory" + event.getEventCategory().getId() + "id Does not exist"));
